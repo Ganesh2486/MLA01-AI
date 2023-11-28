@@ -1,0 +1,36 @@
+import tensorflow as tf
+from tensorflow.keras import layers, models
+
+
+def build_neural_network(input_size, hidden_size, output_size):
+    model = models.Sequential([
+        layers.Dense(hidden_size, activation='relu', input_shape=(input_size,)),
+        layers.Dense(output_size, activation='softmax')
+    ])
+    return model
+
+
+input_size = 4
+output_size = 2
+data_size = 1000
+
+x_train = tf.random.normal((data_size, input_size))
+y_train = tf.keras.utils.to_categorical(tf.random.uniform((data_size,), minval=0, maxval=output_size, dtype=tf.int32), num_classes=output_size)
+
+
+hidden_size = 64
+model = build_neural_network(input_size, hidden_size, output_size)
+
+
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+
+epochs = 10
+batch_size = 32
+model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size)
+
+
+x_new = tf.random.normal((5, input_size))
+predictions = model.predict(x_new)
+
+print("Predictions:")
+print(predictions)
