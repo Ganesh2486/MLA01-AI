@@ -1,0 +1,51 @@
+initial_state = {'left': {'missionaries': 3, 'cannibals': 3}, 'right': {'missionaries': 0, 'cannibals': 0}, 'boat': 'left'}
+
+goal_state = {'left': {'missionaries': 0, 'cannibals': 0}, 'right': {'missionaries': 3, 'cannibals': 3}, 'boat': 'right'}
+
+def is_valid(state):
+   
+    for side in ['left', 'right']:
+        if state[side]['missionaries'] < state[side]['cannibals'] and state[side]['missionaries'] > 0:
+            return False
+    return True
+
+def get_moves(state):
+    moves = []
+    side = state['boat']
+    other_side = 'left' if side == 'right' else 'right'
+
+    for m in range(3):
+        for c in range(3):
+            if 1 <= m + c <= 2:
+                new_state = state.copy()
+                new_state[side]['missionaries'] -= m
+                new_state[side]['cannibals'] -= c
+                new_state[other_side]['missionaries'] += m
+                new_state[other_side]['cannibals'] += c
+                new_state['boat'] = other_side
+
+                if is_valid(new_state):
+                    moves.append(new_state)
+
+    return moves
+
+def dfs(current_state, path):
+    path.append(current_state)
+
+    if current_state == goal_state:
+        return True
+
+    possible_moves = get_moves(current_state)
+    for move in possible_moves:
+        if move not in path:
+            if dfs(move, path):
+                return True
+
+    path.pop()
+    return False
+
+path = []
+dfs(initial_state, path)
+
+for step, state in enumerate(path):
+    print(f"Step {step + 1}: {state}")
