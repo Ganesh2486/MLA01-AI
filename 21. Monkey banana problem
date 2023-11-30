@@ -1,0 +1,47 @@
+class MonkeyBananaProblem:
+    def __init__(self):
+        self.room = {'monkey': (0, 0), 'box': (1, 0), 'banana': (3, 3)}
+
+    def move(self, entity, direction):
+        x, y = self.room[entity]
+        if direction == 'up':
+            y += 1
+        elif direction == 'down':
+            y -= 1
+        elif direction == 'left':
+            x -= 1
+        elif direction == 'right':
+            x += 1
+
+        # Check if the new position is valid
+        if self.is_valid_position(x, y):
+            self.room[entity] = (x, y)
+            print(f"{entity} moved to ({x}, {y})")
+        else:
+            print("Invalid move. The monkey hits the wall!")
+
+    def is_valid_position(self, x, y):
+        # Check if the position is within the room boundaries
+        return 0 <= x <= 4 and 0 <= y <= 4
+
+    def solve(self):
+        # Move the monkey to the box
+        self.move('monkey', 'right')
+        self.move('monkey', 'right')
+        self.move('monkey', 'up')
+        self.move('monkey', 'up')
+
+        # Move the monkey to the banana using the box
+        self.move('box', 'right')
+        self.move('box', 'right')
+        self.move('monkey', 'right')
+        self.move('monkey', 'up')
+        self.move('monkey', 'up')
+
+        print("Monkey reached the banana!")
+
+# Create an instance of the MonkeyBananaProblem class
+problem = MonkeyBananaProblem()
+
+# Solve the problem
+problem.solve()
